@@ -1,5 +1,63 @@
+* {
+  box-sizing: border-box;
+}
+
+body, textarea  {
+  color: #262626;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+button {
+  border: 0;
+  background-color: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.action-button {
+  color: #0095f6;
+  font-weight: 600;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: 600;
+}
+
+.small {
+  font-weight: normal;
+  line-height: 15px;
+  font-size: 12px;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.padding {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.m-l-a {
+  margin-left: auto;
+}
+
 .App {
-  text-align: center;
+  max-width: 614px;
+  margin: 0 auto;
 }
 
 .App-logo {
