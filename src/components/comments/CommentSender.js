@@ -37,7 +37,7 @@ const CommentSender = ({ onSend }) => {
 
     return (
         <CommentSenderWrapper className='padding'>
-            <SendForm onSubmit={onSend}>
+            <SendForm onSubmit={ onSend }>
                 <TextArea placeholder='Добавьте комментарий...'
                           name='text'
                           value={ text }

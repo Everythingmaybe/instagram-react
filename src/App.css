@@ -51,6 +51,10 @@ a {
   padding-right: 16px;
 }
 
+.no-padding {
+  padding: 0 !important;
+}
+
 .m-l-a {
   margin-left: auto;
 }

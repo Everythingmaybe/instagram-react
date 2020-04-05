@@ -7,6 +7,7 @@ import PostHeader from "./PostHeader";
 import LikeButton from "../buttons/LikeButton";
 import IconButtonWrapper from "../buttons/IconButtonWrapper";
 import CommentSender from "../comments/CommentSender";
+import Comment from "../comments/Comment";
 
 const PostWrapper = styled.article`
     margin-bottom: 60px;
@@ -62,6 +63,19 @@ const Post = ({ profileName, postImage }) => {
                         { likesCount.toLocaleString('ru-RU') } отметок "Нравится"
                     </button>
                 </section>
+
+                <div className="post-comments-wrapper padding">
+                    <div className="post-description">
+                        <Comment profile='nikolya_lya_lya'
+                                 text='Some comment and etc!!!'/>
+                    </div>
+                    <div className="post-comments">
+                        <Comment profile='some_user'
+                                 text='Some comment and etc. Some comment and etc. Some comment and etc!!!'/>
+                        <Comment profile='nikolya'
+                                 text='Some comment and etc!!!'/>
+                    </div>
+                </div>
 
                 <CommentSender onSend={send}/>
             </div>

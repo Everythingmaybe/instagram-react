@@ -19,11 +19,11 @@ const InAnimation = styled.span`
     display: inline-block;
 `;
 
-const LikeButton = ({ style }) => {
+const LikeButton = (props) => {
     const [ selected, setSelected ] = useState(false);
 
     return (
-        <IconButtonWrapper style={ style }
+        <IconButtonWrapper { ...props }
                            onClick={() => setSelected(!selected)}>
             { selected
                 ? <Bounce>

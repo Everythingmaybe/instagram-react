@@ -6,19 +6,18 @@ const IconButton = styled.button`
     border: none;
     cursor: pointer;
     padding: 8px;
-    font-size: 24px;
+    font-size: ${ ({ small }) => small ? '12px' : '24px' };
     line-height: .9;
     &:focus {
         outline: 0;
     }
 `;
 
-const IconButtonWrapper = ({ onClick, children, style }) => {
+const IconButtonWrapper = (props) => {
     return (
-        <IconButton style={ style }
-                    onClick={onClick}
+        <IconButton { ...props }
                     type='button'>
-            { children }
+            { props.children }
         </IconButton>
     );
 };
