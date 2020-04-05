@@ -11,13 +11,25 @@ const PostCommentText = styled.div`
     flex-grow: 1;
 `;
 
-const Comment = ({ profile, text, liked }) => {
+const Comment = ({ id, profile, text, liked, isDescription, toggleCommentLike }) => {
+    const toggleLike = () => {
+        toggleCommentLike(id)
+    };
+
     return (
         <PostComment>
             <PostCommentText>
                 <a href="#">{ profile }</a> <span>{ text }</span>
             </PostCommentText>
-            <LikeButton small={true} className='no-padding'/>
+            {
+                !isDescription
+                ? <LikeButton small={true}
+                              className='no-padding'
+                              liked={liked}
+                              onClick={toggleLike}/>
+                : ''
+            }
+
         </PostComment>
     );
 };

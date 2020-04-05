@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled, { keyframes } from "styled-components";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,12 +20,9 @@ const InAnimation = styled.span`
 `;
 
 const LikeButton = (props) => {
-    const [ selected, setSelected ] = useState(false);
-
     return (
-        <IconButtonWrapper { ...props }
-                           onClick={() => setSelected(!selected)}>
-            { selected
+        <IconButtonWrapper { ...props }>
+            { props.liked
                 ? <Bounce>
                     <FontAwesomeIcon icon={ fasHeart } color={ colors.red }/>
                   </Bounce>

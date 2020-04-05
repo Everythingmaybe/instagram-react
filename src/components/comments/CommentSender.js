@@ -31,13 +31,19 @@ const TextArea = styled.textarea`
 const CommentSender = ({ onSend }) => {
     const [ text, setText ] = useState('');
 
+    const sendComment = (event) => {
+        event.preventDefault();
+        onSend(event.target.text.value);
+        setText('');
+    };
+
     const onChangeText = ({ target: { value } }) => {
         setText(value);
     };
 
     return (
         <CommentSenderWrapper className='padding'>
-            <SendForm onSubmit={ onSend }>
+            <SendForm onSubmit={ sendComment }>
                 <TextArea placeholder='Добавьте комментарий...'
                           name='text'
                           value={ text }
