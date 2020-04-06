@@ -1,48 +1,24 @@
-import React, {useEffect, useRef, useState} from 'react';
-import './App.css';
-
-import Post from "./components/post/Post";
+import React from 'react';
+import {
+    BrowserRouter as Router,
+    Route,
+} from "react-router-dom";
+import PostPage from "./pages/PostPage";
+import {Provider} from "react-redux";
+import store from "./store";
+import HomePage from "./pages/HomePage";
 
 function App() {
-    const [postsList, setPostsList] = useState([]);
-
-    // TODO: Move all getting/setting to Redux
-    useEffect(() => {
-        (async () => {
-            const response = await fetch(
-                'https://picsum.photos/v2/list?page=3',
-            );
-            const postsList = await response.json();
-            const mappedPostsList = postsList.map(({id, author, download_url}) => ({
-                id,
-                author,
-                download_url,
-                description: 'Some description',
-                comments: [],
-                likesCount: Math.ceil((Math.random() * 1000000)),
-            }));
-            setPostsList(mappedPostsList);
-        })()
-    }, []);
-
     return (
-        <div className="App">
-            {
-                postsList.map(({
-                                   author,
-                                   download_url,
-                                   id,
-                                   description,
-                                   comments,
-                                   likesCount
-                               }) => <Post profileName={author}
-                                           postImage={download_url}
-                                           description={description}
-                                           comments={comments}
-                                           likesCount={likesCount}
-                                           key={id}/>)
-            }
-        </div>
+        <Provider store={ store }>
+            <Router>
+                <Route path='/'
+                       exact
+                       component={ HomePage }/>
+                <Route path='/post'
+                       component={ PostPage }/>
+            </Router>
+        </Provider>
     );
 }
 
