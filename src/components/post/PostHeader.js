@@ -34,11 +34,11 @@ const PostHeader = ({ profileName, additionalInfo, avatar }) => {
 
             <InfoWrapper>
                 <div>
-                    <a href="#">{ profileName }</a>
+                    <a href="/">{ profileName }</a>
                 </div>
                 { additionalInfo
                     ? <div className='d-flex'><a className='small'
-                              href="#">{ additionalInfo }</a></div>
+                              href="/">{ additionalInfo }</a></div>
                     : ''
                 }
             </InfoWrapper>

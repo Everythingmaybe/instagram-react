@@ -16,7 +16,7 @@ const Image = styled.img`
 // TODO: Need use avatarImage
 const Avatar = ({ avatarImage, profile }) => {
     return (
-        <Link href='#'>
+        <Link href='/'>
             <Image src={ avatarImage }/>
         </Link>
     );

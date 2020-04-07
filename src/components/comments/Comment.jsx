@@ -19,7 +19,7 @@ const Comment = ({ id, profile, text, liked, isDescription, toggleCommentLike })
     return (
         <PostComment>
             <PostCommentText>
-                <a href="#">{ profile }</a> <span>{ text }</span>
+                <a href="/">{ profile }</a> <span>{ text }</span>
             </PostCommentText>
             {
                 !isDescription

@@ -68,8 +68,8 @@ const Post = ({ profileName, postImage, comments, description, likesCount }) => 
                                  profile={profileName}
                                  text={description}/>
                     </div>
-                    <CommentsWrapper comments={commentsList}
-                                     toggleCommentLike={toggleCommentLike}/>
+                    {/*<CommentsWrapper comments={commentsList}*/}
+                    {/*                 toggleCommentLike={toggleCommentLike}/>*/}
                 </div>
 
                 <CommentSender onSend={sendComment}/>
