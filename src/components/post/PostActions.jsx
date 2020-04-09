@@ -5,9 +5,9 @@ import { faBookmark, faComment, faPaperPlane } from "@fortawesome/free-regular-s
 import LikeButton from "../buttons/LikeButton";
 import IconButtonWrapper from "../buttons/IconButtonWrapper";
 
-const PostActions = () => (
+const PostActions = ({ liked, onLike }) => (
     <section className="d-flex padding">
-        <LikeButton style={{ marginLeft: '-8px' }}/>
+        <LikeButton onClick={onLike} liked={liked} style={{ marginLeft: '-8px' }}/>
         <IconButtonWrapper disabled={true}>
             <FontAwesomeIcon icon={ faComment }/>
         </IconButtonWrapper>

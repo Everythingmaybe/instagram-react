@@ -11,7 +11,7 @@ const PostCommentText = styled.div`
     flex-grow: 1;
 `;
 
-const Comment = ({ id, profile, text, liked, isDescription, toggleCommentLike }) => {
+const Comment = ({ id, profileName, text, liked, isDescription, toggleCommentLike }) => {
     const toggleLike = () => {
         toggleCommentLike(id)
     };
@@ -19,7 +19,7 @@ const Comment = ({ id, profile, text, liked, isDescription, toggleCommentLike })
     return (
         <PostComment>
             <PostCommentText>
-                <a href="/">{ profile }</a> <span>{ text }</span>
+                <a href="/">{ profileName }</a> <span>{ text }</span>
             </PostCommentText>
             {
                 !isDescription

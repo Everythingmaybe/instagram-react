@@ -1,8 +1,12 @@
 import { combineReducers } from "redux";
-import homePageReducer from "./homePageReducer";
+import postsReducer from "./postsReducer";
+import commentsReducer from "./commentsReducer";
 
 const rootReducer = combineReducers({
-    homePage: homePageReducer,
+    homePage: combineReducers({
+        posts: postsReducer,
+        comments: commentsReducer,
+    }),
 });
 
 export default rootReducer;

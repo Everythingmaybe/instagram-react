@@ -28,12 +28,12 @@ const TextArea = styled.textarea`
     color: #262626;
 `;
 
-const CommentSender = ({ onSend }) => {
+const CommentSender = ({ onSend, disabled }) => {
     const [ text, setText ] = useState('');
 
     const sendComment = (event) => {
         event.preventDefault();
-        onSend(event.target.text.value);
+        onSend(text);
         setText('');
     };
 
@@ -41,15 +41,24 @@ const CommentSender = ({ onSend }) => {
         setText(value);
     };
 
+    const onEnterPress = (e) => {
+        if(e.keyCode === 13 && e.shiftKey === false) {
+            sendComment(e);
+        }
+    }
+
     return (
         <CommentSenderWrapper className='padding'>
-            <SendForm onSubmit={ sendComment }>
+            <SendForm>
                 <TextArea placeholder='Добавьте комментарий...'
                           name='text'
                           value={ text }
+                          disabled={ disabled }
+                          onKeyDown={ onEnterPress }
                           onChange={onChangeText} />
                 <button className='action-button'
-                        disabled={ !text.length }
+                        onClick={sendComment}
+                        disabled={ !text.length || disabled }
                         type='submit'>Опубликовать</button>
             </SendForm>
         </CommentSenderWrapper>

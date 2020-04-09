@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 
 import PostHeader from "./PostHeader";
@@ -6,6 +6,9 @@ import CommentSender from "../comments/CommentSender";
 import Comment from "../comments/Comment";
 import PostActions from "./PostActions";
 import CommentsWrapper from "../comments/CommentsWrapper";
+import {useDispatch, useSelector} from "react-redux";
+import {togglePostLike} from "../../actions/postsActions";
+import {sendComment, toggleCommentLike as toggleCommentLikeAction} from "../../actions/commentsActions";
 
 const PostWrapper = styled.article`
     margin-bottom: 60px;
@@ -21,24 +24,37 @@ const PostImage = styled.img`
 
 const avatar = 'https://scontent-arn2-2.cdninstagram.com/v/t51.2885-19/s150x150/44296648_251617955511393_1918479114218504192_n.jpg?_nc_ht=scontent-arn2-2.cdninstagram.com&_nc_ohc=i0-8EfQJq1QAX-MKEL9&oh=38f4d22bcaa763a37bca85da5eb0ba2b&oe=5EB08A8D';
 
-const Post = ({ profileName, postImage, comments, description, likesCount }) => {
-    const [commentsList, setComments] = useState(comments);
+const Post = ({ id }) => {
+    const dispatch = useDispatch();
 
-    // TODO: Remove this mutation events
-    const sendComment = (value) => {
-        setComments([...commentsList, {
-            id: commentsList.length,
-            profile: 'admin',
-            liked: false,
-            text: value,
-        }]);
+    const [ comments, setComments ] = useState([]);
+
+    const { author: profileName, imgSrc: postImage, commentsIds, description, likesCount, liked } = useSelector(state => state.homePage.posts.list[id]);
+    const { list: commentsList, disabledSendingPostsIds }  = useSelector(state => state.homePage.comments);
+
+    const disabledSending = disabledSendingPostsIds.includes(id);
+
+    useEffect(() => {
+        if (commentsList) {
+            setComments(commentsIds.filter(Boolean).slice(0, 2).map((id) => commentsList[id]));
+        }
+    }, [commentsList, commentsIds]);
+
+    const toggleLike = () => {
+        dispatch(togglePostLike(id))
     };
 
-    const toggleCommentLike = (id, liked) => {
-        const likedComment = commentsList.find((comment) => comment.id === id);
-        likedComment.liked = !likedComment.liked;
-        setComments([...commentsList]);
-        console.log(commentsList);
+    const toggleCommentLike = (commentId) => {
+        dispatch(toggleCommentLikeAction(commentId))
+    };
+
+    const onSend = (text) => {
+        const newComment = {
+            profileName: `admin`,
+            text: text,
+            postId: id,
+        };
+        dispatch(sendComment(newComment));
     };
 
     return (
@@ -52,7 +68,7 @@ const Post = ({ profileName, postImage, comments, description, likesCount }) => 
             </div>
 
             <div className='post-actions'>
-                <PostActions/>
+                <PostActions liked={liked} onLike={toggleLike}/>
 
                 <section style={{ marginBottom: '8px' }}
                          className='padding'>
@@ -65,14 +81,14 @@ const Post = ({ profileName, postImage, comments, description, likesCount }) => 
                 <div className="post-comments-wrapper padding">
                     <div className="post-description">
                         <Comment isDescription={ true }
-                                 profile={profileName}
+                                 profileName={profileName}
                                  text={description}/>
                     </div>
-                    {/*<CommentsWrapper comments={commentsList}*/}
-                    {/*                 toggleCommentLike={toggleCommentLike}/>*/}
+                    <CommentsWrapper toggleCommentLike={toggleCommentLike}
+                                     comments={comments}/>
                 </div>
 
-                <CommentSender onSend={sendComment}/>
+                <CommentSender disabled={disabledSending} onSend={onSend}/>
             </div>
         </PostWrapper>
     );
