@@ -1,3 +1,5 @@
+import * as immutable from 'object-path-immutable';
+
 import {
     DISABLE_SEND_FORM,
     ENABLE_SEND_FORM,
@@ -14,53 +16,25 @@ const commentsInitialState = {
 const commentsReducer = (state = commentsInitialState, action) => {
     switch (action.type) {
         case GET_COMMENTS_SUCCESS:
-            return {
-                ...state,
-                list: {
-                    ...state.list,
-                    ...action.payload.list
-                },
-                allIds: [
-                    ...state.allIds,
-                    ...action.payload.allIds,
-                ],
-            };
+            return immutable
+                .wrap(state)
+                .merge('list', action.payload.list)
+                .push('allIds', ...action.payload.allIds)
+                .value();
         case SEND_COMMENT_SUCCESS:
-            return {
-                ...state,
-                list: {
-                    ...state.list,
-                    [action.payload.id]: action.payload
-                },
-                allIds: [
-                    action.payload.id,
-                    ...state.allIds,
-                ],
-            };
+            return immutable
+                .wrap(state)
+                .set(`list.${action.payload.id}`, action.payload)
+                .insert('allIds', action.payload.id, 0)
+                .value();
         case DISABLE_SEND_FORM:
-            return {
-                ...state,
-                disabledSendingPostsIds: [
-                    ...state.disabledSendingPostsIds,
-                    action.payload,
-                ],
-            };
+            return immutable.push(state,'disabledSendingPostsIds', action.payload);
         case ENABLE_SEND_FORM:
-            return {
-                ...state,
-                disabledSendingPostsIds: state.disabledSendingPostsIds.filter(id => id !== action.payload),
-            };
+            const index = state.disabledSendingPostsIds
+                .findIndex((id) => id === action.payload);
+            return immutable.del(state, `disabledSendingPostsIds.${index}`);
         case TOGGLE_COMMENT_LIKE:
-            return {
-                ...state,
-                list: {
-                    ...state.list,
-                    [action.payload]: {
-                        ...state.list[action.payload],
-                        liked: !state.list[action.payload].liked,
-                    },
-                },
-            };
+            return immutable.update(state, `list.${action.payload}.liked`, value => !value);
         default:
             return state;
     }

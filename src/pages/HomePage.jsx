@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {getPosts} from "../actions/postsActions";
 
 function HomePage() {
-    const [ page, setPage ] = useState(4);
+    const [ page, setPage ] = useState(6);
     const { loading, list, allIds } = useSelector(state => state.homePage.posts);
     const dispatch = useDispatch();
 
@@ -18,13 +18,13 @@ function HomePage() {
 
     return (
         <div className="App">
-            {allIds.map((id) => list[id])
-                .map(({ id }) => <Post id={id} key={id}/>)}
             {
                 loading
                     ? <div> Загрузка </div>
                     : <button onClick={onLoadMorePosts}>Загрузить больше публикаций </button>
             }
+            {allIds.map((id) => list[id])
+                .map(({ id }) => <Post id={id} key={id}/>)}
         </div>
     );
 }

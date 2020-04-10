@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import styled from "styled-components";
 
 import PostHeader from "./PostHeader";
@@ -9,6 +9,7 @@ import CommentsWrapper from "../comments/CommentsWrapper";
 import {useDispatch, useSelector} from "react-redux";
 import {togglePostLike} from "../../actions/postsActions";
 import {sendComment, toggleCommentLike as toggleCommentLikeAction} from "../../actions/commentsActions";
+import {createSelector} from "reselect";
 
 const PostWrapper = styled.article`
     margin-bottom: 60px;
@@ -26,19 +27,22 @@ const avatar = 'https://scontent-arn2-2.cdninstagram.com/v/t51.2885-19/s150x150/
 
 const Post = ({ id }) => {
     const dispatch = useDispatch();
-
-    const [ comments, setComments ] = useState([]);
-
-    const { author: profileName, imgSrc: postImage, commentsIds, description, likesCount, liked } = useSelector(state => state.homePage.posts.list[id]);
-    const { list: commentsList, disabledSendingPostsIds }  = useSelector(state => state.homePage.comments);
+    const homeState = useSelector(state => state.homePage);
+    const { author: profileName, imgSrc: postImage, description, likesCount, liked } = useSelector(state => state.homePage.posts.list[id]);
+    const disabledSendingPostsIds  = useSelector(state => state.homePage.comments.disabledSendingPostsIds);
 
     const disabledSending = disabledSendingPostsIds.includes(id);
 
-    useEffect(() => {
-        if (commentsList) {
-            setComments(commentsIds.filter(Boolean).slice(0, 2).map((id) => commentsList[id]));
-        }
-    }, [commentsList, commentsIds]);
+    const commentsIds = (state) => state.posts.list[id].commentsIds;
+    const commentsList = (state) => state.comments.list;
+
+    const commentsIdsSelector = createSelector(
+        [commentsIds, commentsList],
+        (commentsIds, commentsList) => commentsIds
+            .filter(Boolean)
+            .slice(0, 2)
+            .map((id) => commentsList[id]),
+    );
 
     const toggleLike = () => {
         dispatch(togglePostLike(id))
@@ -85,7 +89,7 @@ const Post = ({ id }) => {
                                  text={description}/>
                     </div>
                     <CommentsWrapper toggleCommentLike={toggleCommentLike}
-                                     comments={comments}/>
+                                     comments={commentsIdsSelector(homeState)}/>
                 </div>
 
                 <CommentSender disabled={disabledSending} onSend={onSend}/>

@@ -34,13 +34,20 @@ export const enableSendForm = (postId) => {
 
 export const sendComment = (comment) => dispatch => {
     dispatch(disableSendForm(comment.postId));
-    setTimeout(() => {
-        const sendComment = {
-            ...comment,
-            id: uniqueId(),
-            liked: false,
-        };
-        dispatch(sendCommentSuccess(sendComment));
-        dispatch(enableSendForm(comment.postId));
-    }, 1500);
+    const sendComment = {
+        ...comment,
+        id: uniqueId(),
+        liked: false,
+    };
+    dispatch(sendCommentSuccess(sendComment));
+    dispatch(enableSendForm(comment.postId));
+    // setTimeout(() => {
+    //     const sendComment = {
+    //         ...comment,
+    //         id: uniqueId(),
+    //         liked: false,
+    //     };
+    //     dispatch(sendCommentSuccess(sendComment));
+    //     dispatch(enableSendForm(comment.postId));
+    // }, 1500);
 };

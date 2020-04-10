@@ -1,3 +1,5 @@
+import * as immutable from 'object-path-immutable';
+
 import { GET_POSTS_FAILED, GET_POSTS_STARTED, GET_POSTS_SUCCESS, TOGGLE_POST_LIKE } from "../actions/postsActions";
 import { SEND_COMMENT_SUCCESS } from "../actions/commentsActions";
 
@@ -14,44 +16,16 @@ const postsReducer = (state = postsInitialState, action) => {
         case GET_POSTS_FAILED:
             return { ...state, loading: false };
         case GET_POSTS_SUCCESS:
-            return {
-                ...state,
-                list: {
-                    ...state.list,
-                    ...action.payload.list,
-                },
-                allIds: [
-                    ...state.allIds,
-                    ...action.payload.allIds,
-                ],
-                loading: false,
-            };
+            return immutable
+                .wrap(state)
+                .merge('list', action.payload.list)
+                .push('allIds', ...action.payload.allIds)
+                .set('loading', false)
+                .value();
         case TOGGLE_POST_LIKE:
-            return {
-                ...state,
-                list: {
-                    ...state.list,
-                    [action.payload]: {
-                        ...state.list[action.payload],
-                        liked: !state.list[action.payload].liked,
-                    },
-                },
-            };
-        // TODO: Можно ли так делать один экшен находится в двух редьюсерах
+            return immutable.update(state, `list.${action.payload}.liked`, value => !value);
         case SEND_COMMENT_SUCCESS:
-            return {
-                ...state,
-                list: {
-                    ...state.list,
-                    [action.payload.postId]: {
-                        ...state.list[action.payload.postId],
-                        commentsIds: [
-                            action.payload.id,
-                            ...state.list[action.payload.postId].commentsIds,
-                        ],
-                    }
-                }
-            };
+            return immutable.insert(state,`list.${action.payload.postId}.commentsIds`, action.payload.id, 0);
         default:
             return state;
     }
