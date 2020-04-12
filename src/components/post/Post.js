@@ -1,15 +1,16 @@
-import React from "react";
+import React, {useCallback} from "react";
 import styled from "styled-components";
 
 import PostHeader from "./PostHeader";
-import CommentSender from "../comments/CommentSender";
 import Comment from "../comments/Comment";
 import PostActions from "./PostActions";
 import CommentsWrapper from "../comments/CommentsWrapper";
-import {useDispatch, useSelector} from "react-redux";
+import {connect, shallowEqual, useDispatch, useSelector} from "react-redux";
 import {togglePostLike} from "../../actions/postsActions";
 import {sendComment, toggleCommentLike as toggleCommentLikeAction} from "../../actions/commentsActions";
 import {createSelector} from "reselect";
+import CommentSender from "../comments/CommentSender";
+import {MemoDecorator} from "../../containers/decorators";
 
 const PostWrapper = styled.article`
     margin-bottom: 60px;
@@ -17,49 +18,36 @@ const PostWrapper = styled.article`
     border: 1px solid #dbdbdb;
 `;
 
-const PostImage = styled.img`
+const PostImage = React.memo(styled.img`
     display: block;
     width: 100%;
     height: auto;
-`;
+`);
 
 const avatar = 'https://scontent-arn2-2.cdninstagram.com/v/t51.2885-19/s150x150/44296648_251617955511393_1918479114218504192_n.jpg?_nc_ht=scontent-arn2-2.cdninstagram.com&_nc_ohc=i0-8EfQJq1QAX-MKEL9&oh=38f4d22bcaa763a37bca85da5eb0ba2b&oe=5EB08A8D';
 
-const Post = ({ id }) => {
+const Post = ({ id, disabledSending, firstTwoComments }) => {
     const dispatch = useDispatch();
-    const homeState = useSelector(state => state.homePage);
     const { author: profileName, imgSrc: postImage, description, likesCount, liked } = useSelector(state => state.homePage.posts.list[id]);
-    const disabledSendingPostsIds  = useSelector(state => state.homePage.comments.disabledSendingPostsIds);
 
-    const disabledSending = disabledSendingPostsIds.includes(id);
+    console.log('render POST ' + id);
 
-    const commentsIds = (state) => state.posts.list[id].commentsIds;
-    const commentsList = (state) => state.comments.list;
-
-    const commentsIdsSelector = createSelector(
-        [commentsIds, commentsList],
-        (commentsIds, commentsList) => commentsIds
-            .filter(Boolean)
-            .slice(0, 2)
-            .map((id) => commentsList[id]),
-    );
-
-    const toggleLike = () => {
+    const toggleLike = useCallback(() => {
         dispatch(togglePostLike(id))
-    };
+    }, [dispatch, id]);
 
-    const toggleCommentLike = (commentId) => {
+    const toggleCommentLike = useCallback((commentId) => {
         dispatch(toggleCommentLikeAction(commentId))
-    };
+    }, [dispatch]);
 
-    const onSend = (text) => {
+    const onSend = useCallback((text) => {
         const newComment = {
             profileName: `admin`,
             text: text,
             postId: id,
         };
         dispatch(sendComment(newComment));
-    };
+    }, [dispatch, id]);
 
     return (
         <PostWrapper>
@@ -89,7 +77,7 @@ const Post = ({ id }) => {
                                  text={description}/>
                     </div>
                     <CommentsWrapper toggleCommentLike={toggleCommentLike}
-                                     comments={commentsIdsSelector(homeState)}/>
+                                     comments={firstTwoComments}/>
                 </div>
 
                 <CommentSender disabled={disabledSending} onSend={onSend}/>
@@ -97,5 +85,28 @@ const Post = ({ id }) => {
         </PostWrapper>
     );
 };
+
+const selectDisabledSending = createSelector(
+    (state) => state.homePage.comments.disabledSendingPostsIds,
+    (state, ownState) => ownState.id,
+    (disabledSendingPostsIds, id) => disabledSendingPostsIds.includes(id),
+);
+
+const selectFirstTwoComments = createSelector(
+    (state, ownState) => state.homePage.posts.list[ownState.id].commentsIds,
+    (state) => state.homePage.comments.list,
+    (commentsIds, commentsList) => commentsIds
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((id) => commentsList[id]),
+);
+
+const mapStateToProps = (state, ownState) => ({
+    disabledSending: selectDisabledSending(state, ownState),
+    firstTwoComments: selectFirstTwoComments(state, ownState),
+    id: ownState.id,
+});
+
+export const PostConnect = connect(mapStateToProps)(MemoDecorator(Post));
 
 export default Post;

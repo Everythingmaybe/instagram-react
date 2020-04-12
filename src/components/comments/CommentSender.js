@@ -1,6 +1,7 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import '../../App.css';
+import {MemoDecorator} from "../../containers/decorators";
 
 const CommentSenderWrapper = styled.section`
     border-top: 1px solid #efefef;
@@ -28,11 +29,13 @@ const TextArea = styled.textarea`
     color: #262626;
 `;
 
-const CommentSender = ({ onSend, disabled }) => {
+const CommentSender = MemoDecorator(({ onSend, disabled }) => {
     const [ text, setText ] = useState('');
 
+    console.log('Render CommentSender');
+
     const sendComment = (event) => {
-        event.preventDefault();
+        event.persist();
         onSend(text);
         setText('');
     };
@@ -63,6 +66,6 @@ const CommentSender = ({ onSend, disabled }) => {
             </SendForm>
         </CommentSenderWrapper>
     );
-};
+});
 
 export default CommentSender;

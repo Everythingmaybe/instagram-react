@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Avatar from "../Avatar";
 import '../../App.css';
+import {MemoDecorator} from "../../containers/decorators";
 
 const PostHeaderWrapper = styled.header`
     display: flex;
@@ -24,7 +25,8 @@ const InfoWrapper = styled.div`
 `;
 
 
-const PostHeader = ({ profileName, additionalInfo, avatar }) => {
+const PostHeader = MemoDecorator(({ profileName, additionalInfo, avatar }) => {
+    console.log('render PostHeader');
     return (
         <PostHeaderWrapper>
 
@@ -38,13 +40,13 @@ const PostHeader = ({ profileName, additionalInfo, avatar }) => {
                 </div>
                 { additionalInfo
                     ? <div className='d-flex'><a className='small'
-                              href="/">{ additionalInfo }</a></div>
+                                                 href="/">{ additionalInfo }</a></div>
                     : ''
                 }
             </InfoWrapper>
 
         </PostHeaderWrapper>
     );
-};
+});
 
 export default PostHeader;

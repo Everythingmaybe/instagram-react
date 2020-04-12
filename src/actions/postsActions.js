@@ -27,7 +27,7 @@ const mapPost = ({ id, author, download_url: imgSrc, likesCount = 0, description
 };
 
 const generateComments = () => {
-    const commentsLength = parseInt(Math.random() * 100);
+    const commentsLength = parseInt(Math.random() * 1000);
     return Array(commentsLength)
         .fill(undefined)
         .map((_, key) => ({

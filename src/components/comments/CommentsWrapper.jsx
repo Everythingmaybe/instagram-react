@@ -1,7 +1,9 @@
 import React from "react";
 import Comment from "./Comment";
+import {MemoDecorator} from "../../containers/decorators";
 
-const CommentsWrapper = ({ comments, toggleCommentLike }) => {
+const CommentsWrapper = MemoDecorator(({ comments, toggleCommentLike }) => {
+    console.log('render CommentsWrapper');
     return (
         <div className="post-comments">
             {
@@ -13,6 +15,6 @@ const CommentsWrapper = ({ comments, toggleCommentLike }) => {
             }
         </div>
     );
-};
+});
 
 export default CommentsWrapper;

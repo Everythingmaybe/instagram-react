@@ -15,6 +15,7 @@ const Image = styled.img`
 
 // TODO: Need use avatarImage
 const Avatar = ({ avatarImage, profile }) => {
+    console.log('render Avatar');
     return (
         <Link href='/'>
             <Image src={ avatarImage }/>

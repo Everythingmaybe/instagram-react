@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import Post from "../components/post/Post";
+import Post, {PostConnect} from "../components/post/Post";
 import { useDispatch, useSelector } from "react-redux";
 import {getPosts} from "../actions/postsActions";
 
-function HomePage() {
-    const [ page, setPage ] = useState(6);
+const HomePage = () => {
+    const [ page, setPage ] = useState(1);
     const { loading, list, allIds } = useSelector(state => state.homePage.posts);
     const dispatch = useDispatch();
-
+    console.log('render HomePage');
     useEffect(() => {
         dispatch(getPosts(page));
     },[dispatch, page]);
@@ -24,9 +24,9 @@ function HomePage() {
                     : <button onClick={onLoadMorePosts}>Загрузить больше публикаций </button>
             }
             {allIds.map((id) => list[id])
-                .map(({ id }) => <Post id={id} key={id}/>)}
+                .map(({ id }) => <PostConnect id={id} key={id}/>)}
         </div>
     );
-}
+};
 
 export default HomePage;
