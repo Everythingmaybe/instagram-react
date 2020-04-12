@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import LikeButton from "../buttons/LikeButton";
+import {MemoDecorator} from "../../containers/decorators";
 
 const PostComment = styled.div`
     display: flex;
@@ -11,7 +12,8 @@ const PostCommentText = styled.div`
     flex-grow: 1;
 `;
 
-const Comment = ({ id, profileName, text, liked, isDescription, toggleCommentLike }) => {
+const Comment = MemoDecorator(({ id, profileName, text, liked, isDescription, toggleCommentLike }) => {
+    console.log('render Comment');
     const toggleLike = () => {
         toggleCommentLike(id)
     };
@@ -23,15 +25,15 @@ const Comment = ({ id, profileName, text, liked, isDescription, toggleCommentLik
             </PostCommentText>
             {
                 !isDescription
-                ? <LikeButton small={true}
-                              className='no-padding'
-                              liked={liked}
-                              onClick={toggleLike}/>
-                : ''
+                    ? <LikeButton small={true}
+                                  className='no-padding'
+                                  liked={liked}
+                                  onClick={toggleLike}/>
+                    : ''
             }
 
         </PostComment>
     );
-};
+});
 
 export default Comment;
