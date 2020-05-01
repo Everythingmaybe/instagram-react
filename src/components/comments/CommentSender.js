@@ -45,7 +45,7 @@ const CommentSender = MemoDecorator(({ onSend, disabled }) => {
     };
 
     const onEnterPress = (e) => {
-        if(e.keyCode === 13 && e.shiftKey === false) {
+        if(e.key.toLowerCase() === 'enter') {
             sendComment(e);
         }
     }
