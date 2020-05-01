@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import Post, {PostConnect} from "../components/post/Post";
+import { PostConnect } from "../components/post/Post";
 import { useDispatch, useSelector } from "react-redux";
-import {getPosts} from "../actions/postsActions";
+import { getPostStarted } from "../actions/postsActions";
 
 const HomePage = () => {
     const [ page, setPage ] = useState(1);
-    const { loading, list, allIds } = useSelector(state => state.homePage.posts);
+    const { loading, list, allIds } = useSelector(state => state.posts);
     const dispatch = useDispatch();
     console.log('render HomePage');
     useEffect(() => {
-        dispatch(getPosts(page));
+        dispatch(getPostStarted(page));
     },[dispatch, page]);
 
     const onLoadMorePosts = () => {

@@ -1,5 +1,3 @@
-import {uniqueId} from "../commonFuncs";
-
 export const GET_COMMENTS_SUCCESS = 'GET_COMMENTS_SUCCESS';
 export const SEND_COMMENT_STARTED = 'SEND_COMMENT_STARTED';
 export const SEND_COMMENT_SUCCESS = 'SEND_COMMENT_SUCCESS';
@@ -16,8 +14,8 @@ export const toggleCommentLike = (id) => {
     return { type: TOGGLE_COMMENT_LIKE, payload: id }
 };
 
-export const sendCommentStarted = () => {
-    return { type: SEND_COMMENT_STARTED };
+export const sendCommentStarted = (comment) => {
+    return { type: SEND_COMMENT_STARTED, payload: comment };
 };
 
 export const sendCommentSuccess = (comment) => {
@@ -30,24 +28,4 @@ export const disableSendForm = (postId) => {
 
 export const enableSendForm = (postId) => {
     return { type: ENABLE_SEND_FORM, payload: postId };
-};
-
-export const sendComment = (comment) => dispatch => {
-    dispatch(disableSendForm(comment.postId));
-    const sendComment = {
-        ...comment,
-        id: uniqueId(),
-        liked: false,
-    };
-    dispatch(sendCommentSuccess(sendComment));
-    dispatch(enableSendForm(comment.postId));
-    // setTimeout(() => {
-    //     const sendComment = {
-    //         ...comment,
-    //         id: uniqueId(),
-    //         liked: false,
-    //     };
-    //     dispatch(sendCommentSuccess(sendComment));
-    //     dispatch(enableSendForm(comment.postId));
-    // }, 1500);
 };
