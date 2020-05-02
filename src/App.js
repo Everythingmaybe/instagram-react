@@ -15,7 +15,7 @@ function App() {
                 <Route path='/'
                        exact
                        component={ HomePage }/>
-                <Route path='/post'
+                <Route path='/post/:id'
                        component={ PostPage }/>
             </Router>
         </Provider>

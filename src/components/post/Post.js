@@ -5,12 +5,13 @@ import PostHeader from "./PostHeader";
 import Comment from "../comments/Comment";
 import PostActions from "./PostActions";
 import CommentsWrapper from "../comments/CommentsWrapper";
-import {connect, useDispatch, useSelector} from "react-redux";
+import {connect} from "react-redux";
 import {togglePostLike} from "../../actions/postsActions";
 import {sendCommentStarted, toggleCommentLike as toggleCommentLikeAction} from "../../actions/commentsActions";
 import {createSelector} from "reselect";
 import CommentSender from "../comments/CommentSender";
 import {MemoDecorator} from "../../containers/decorators";
+import {useHistory} from "react-router";
 
 const PostWrapper = styled.article`
     margin-bottom: 60px;
@@ -26,28 +27,13 @@ const PostImage = React.memo(styled.img`
 
 const avatar = 'https://scontent-arn2-2.cdninstagram.com/v/t51.2885-19/s150x150/44296648_251617955511393_1918479114218504192_n.jpg?_nc_ht=scontent-arn2-2.cdninstagram.com&_nc_ohc=i0-8EfQJq1QAX-MKEL9&oh=38f4d22bcaa763a37bca85da5eb0ba2b&oe=5EB08A8D';
 
-const Post = ({ id, firstTwoComments }) => {
-    const dispatch = useDispatch();
-    const { author: profileName, imgSrc: postImage, description, likesCount, liked, disabledSendingForm } = useSelector(state => state.posts.list[id]);
-
+const Post = ({ id, comments, profileName, postImage, description, likesCount, liked, disabledSendingForm, toggleLike, toggleCommentLike, onSend }) => {
     console.log('render POST ' + id);
+    const history = useHistory();
 
-    const toggleLike = useCallback(() => {
-        dispatch(togglePostLike(id))
-    }, [dispatch, id]);
-
-    const toggleCommentLike = useCallback((commentId) => {
-        dispatch(toggleCommentLikeAction(commentId))
-    }, [dispatch]);
-
-    const onSend = useCallback((text) => {
-        const newComment = {
-            profileName: `admin`,
-            text: text,
-            postId: id,
-        };
-        dispatch(sendCommentStarted(newComment));
-    }, [dispatch, id]);
+    const goToPost = useCallback(() => {
+        history.push(`/post/${id}`)
+    }, [history, id]);
 
     return (
         <PostWrapper>
@@ -60,7 +46,7 @@ const Post = ({ id, firstTwoComments }) => {
             </div>
 
             <div className='post-actions'>
-                <PostActions liked={liked} onLike={toggleLike}/>
+                <PostActions liked={liked} goToPost={goToPost} onLike={toggleLike}/>
 
                 <section style={{ marginBottom: '8px' }}
                          className='padding'>
@@ -77,7 +63,7 @@ const Post = ({ id, firstTwoComments }) => {
                                  text={description}/>
                     </div>
                     <CommentsWrapper toggleCommentLike={toggleCommentLike}
-                                     comments={firstTwoComments}/>
+                                     comments={comments}/>
                 </div>
 
                 <CommentSender disabled={disabledSendingForm} onSend={onSend}/>
@@ -95,11 +81,37 @@ const selectFirstTwoComments = createSelector(
         .map((id) => commentsList[id]),
 );
 
-const mapStateToProps = (state, ownState) => ({
-    firstTwoComments: selectFirstTwoComments(state, ownState),
-    id: ownState.id,
+const mapStateToProps = (state, ownState) => {
+    const post = state.posts.list[ownState.id];
+    return {
+        comments: selectFirstTwoComments(state, ownState),
+        id: post.id,
+        profileName: post.author,
+        postImage: post.imgSrc,
+        description: post.description,
+        likesCount: post.likesCount,
+        liked: post.liked,
+        disabledSendingForm: post.disabledSendingForm,
+    }
+};
+
+const mapDispatchToProps = (dispatch, ownState) => ({
+    toggleLike: () => {
+        dispatch(togglePostLike(ownState.id))
+    },
+    toggleCommentLike: (commentId) => {
+        dispatch(toggleCommentLikeAction(commentId))
+    },
+    onSend: (text) => {
+        const newComment = {
+            profileName: `admin`,
+            text: text,
+            postId: ownState.id,
+        };
+        dispatch(sendCommentStarted(newComment));
+    },
 });
 
-export const PostConnect = connect(mapStateToProps)(MemoDecorator(Post));
+export const PostConnect = connect(mapStateToProps, mapDispatchToProps)(MemoDecorator(Post));
 
 export default Post;

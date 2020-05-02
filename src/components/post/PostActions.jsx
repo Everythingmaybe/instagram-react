@@ -6,13 +6,13 @@ import LikeButton from "../buttons/LikeButton";
 import IconButtonWrapper from "../buttons/IconButtonWrapper";
 import {MemoDecorator} from "../../containers/decorators";
 
-const PostActions = MemoDecorator(({ liked, onLike }) => {
+const PostActions = MemoDecorator(({ liked, onLike, goToPost }) => {
     console.log('render PostActions');
     return (
         <section className="d-flex padding">
             <LikeButton onClick={onLike} liked={liked} style={{ marginLeft: '-8px' }}/>
-            <IconButtonWrapper disabled={true}>
-                <FontAwesomeIcon icon={ faComment }/>
+            <IconButtonWrapper>
+                <FontAwesomeIcon icon={ faComment } onClick={goToPost}/>
             </IconButtonWrapper>
             <IconButtonWrapper disabled={true}>
                 <FontAwesomeIcon icon={ faPaperPlane }/>
