@@ -7,7 +7,7 @@ const HomePage = () => {
     const [ page, setPage ] = useState(1);
     const { loading, allIds } = useSelector(state => state.posts);
     const dispatch = useDispatch();
-    console.log('render HomePage');
+
     useEffect(() => {
         if (!allIds.length) {
             dispatch(getPostStarted(page));
@@ -15,8 +15,9 @@ const HomePage = () => {
     },[dispatch, page, allIds]);
 
     const onLoadMorePosts = useCallback(() => {
-        setPage(page + 1);
-        dispatch(getPostStarted(page));
+        const _page = page + 1;
+        setPage(_page);
+        dispatch(getPostStarted(_page));
     }, [page, setPage, dispatch]);
 
     return (
